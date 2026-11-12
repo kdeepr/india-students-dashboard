@@ -4,7 +4,9 @@ An interactive, single-page dashboard about **Indian students in U.S. higher edu
 
 **Every number comes from an official publication and links to it. Nothing is estimated, modelled or interpolated.**
 
-![Static site, no build step](https://img.shields.io/badge/build-none-lightgrey) ![Data through 2024/25](https://img.shields.io/badge/data-through%202024%2F25-blue)
+### 🔗 Live dashboard: **[india-students-dashboard.vercel.app](https://india-students-dashboard.vercel.app)**
+
+[![Live on Vercel](https://img.shields.io/badge/live-Vercel-black?logo=vercel)](https://india-students-dashboard.vercel.app) ![Static site, no build step](https://img.shields.io/badge/build-none-lightgrey) ![Data through 2024/25](https://img.shields.io/badge/data-through%202024%2F25-blue)
 
 ---
 
@@ -77,8 +79,11 @@ You can also just open `index.html` in a browser.
 
 ## Deploy
 
-- **GitHub Pages:** Repo → Settings → Pages → *Deploy from a branch* → `main` / `(root)`. The site goes live at `https://kdeepr.github.io/india-students-dashboard/`.
-- **Vercel / Netlify:** import the repo with no framework preset and no build command. The output directory is the repo root.
+The dashboard is deployed on **Vercel** at **https://india-students-dashboard.vercel.app**. Vercel is connected to this repo, so every push to `main` redeploys it automatically. Vercel settings: Framework Preset *Other*, no build command, output directory = repo root.
+
+Other hosts also work:
+- **GitHub Pages:** Repo → Settings → Pages → *Deploy from a branch* → `main` / `(root)`.
+- **Netlify:** import the repo with no build command and publish directory `/`.
 
 ## Project structure
 
