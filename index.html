@@ -3,1186 +3,138 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Indian Students in USA — Master's Degree Dashboard</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+  <title>India → US Students Dashboard</title>
+  <meta name="description" content="Interactive dashboard on Indian students in U.S. higher education, built only from IIE Open Doors and DHS SEVIS by the Numbers official data." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --saffron: #FF6B00;
-      --white: #FFFFFF;
-      --india-green: #138808;
-      --navy: #0A1628;
-      --blue: #1565C0;
-      --blue-light: #1976D2;
-      --accent: #E91E63;
-      --gold: #FFC107;
-      --surface: #0F1E35;
-      --card: #162237;
-      --card2: #1A2A42;
-      --border: rgba(255,255,255,0.08);
-      --text: #E8EAED;
-      --text-muted: #8E9BB5;
-      --grad1: linear-gradient(135deg, #FF6B00, #FF8C42);
-      --grad2: linear-gradient(135deg, #1565C0, #1976D2);
-      --grad3: linear-gradient(135deg, #138808, #2E7D32);
-      --grad4: linear-gradient(135deg, #E91E63, #C2185B);
-    }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--navy);
-      color: var(--text);
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    /* ── HEADER ── */
-    header {
-      background: linear-gradient(135deg, #0A1628 0%, #0D1F3C 50%, #0A1628 100%);
-      border-bottom: 1px solid var(--border);
-      padding: 0 32px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      backdrop-filter: blur(12px);
-    }
-
-    .header-inner {
-      max-width: 1600px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 72px;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .flag-stripe {
-      display: flex;
-      flex-direction: column;
-      width: 6px;
-      height: 36px;
-      border-radius: 3px;
-      overflow: hidden;
-    }
-    .flag-stripe span { flex: 1; }
-    .flag-stripe .s1 { background: #FF6B00; }
-    .flag-stripe .s2 { background: #FFFFFF; }
-    .flag-stripe .s3 { background: #138808; }
-
-    .logo h1 {
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: -0.3px;
-    }
-    .logo h1 span { color: var(--saffron); }
-
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .year-filter {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 8px 16px;
-    }
-    .year-filter label { font-size: 12px; color: var(--text-muted); }
-    .year-filter select {
-      background: transparent;
-      border: none;
-      color: var(--text);
-      font-size: 13px;
-      font-family: inherit;
-      cursor: pointer;
-      outline: none;
-    }
-    .year-filter select option { background: var(--card); }
-
-    .badge {
-      background: var(--grad1);
-      color: #fff;
-      font-size: 11px;
-      font-weight: 600;
-      padding: 4px 10px;
-      border-radius: 20px;
-      letter-spacing: 0.5px;
-    }
-
-    /* ── MAIN LAYOUT ── */
-    main {
-      max-width: 1600px;
-      margin: 0 auto;
-      padding: 28px 32px 60px;
-    }
-
-    /* ── HERO BANNER ── */
-    .hero {
-      background: linear-gradient(135deg, #0D1F3C, #112240, #0A1628);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 32px 40px;
-      margin-bottom: 28px;
-      position: relative;
-      overflow: hidden;
-    }
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: -60px; right: -60px;
-      width: 300px; height: 300px;
-      background: radial-gradient(circle, rgba(255,107,0,0.12) 0%, transparent 70%);
-      pointer-events: none;
-    }
-    .hero::after {
-      content: '';
-      position: absolute;
-      bottom: -80px; left: 40%;
-      width: 400px; height: 400px;
-      background: radial-gradient(circle, rgba(21,101,192,0.1) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .hero-content { position: relative; z-index: 1; }
-    .hero h2 {
-      font-size: 28px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      margin-bottom: 8px;
-    }
-    .hero h2 em { color: var(--saffron); font-style: normal; }
-    .hero p {
-      font-size: 14px;
-      color: var(--text-muted);
-      max-width: 600px;
-      line-height: 1.6;
-    }
-
-    .hero-meta {
-      display: flex;
-      gap: 24px;
-      margin-top: 20px;
-      flex-wrap: wrap;
-    }
-    .hero-meta-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-    .hero-meta-item .dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-    }
-
-    /* ── KPI CARDS ── */
-    .kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    .kpi-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 24px;
-      position: relative;
-      overflow: hidden;
-      transition: transform 0.2s, box-shadow 0.2s;
-      cursor: default;
-    }
-    .kpi-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 40px rgba(0,0,0,0.3);
-    }
-
-    .kpi-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 3px;
-    }
-    .kpi-card.c1::before { background: var(--grad1); }
-    .kpi-card.c2::before { background: var(--grad2); }
-    .kpi-card.c3::before { background: var(--grad3); }
-    .kpi-card.c4::before { background: var(--grad4); }
-
-    .kpi-icon {
-      width: 44px; height: 44px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      margin-bottom: 16px;
-    }
-    .kpi-icon.c1 { background: rgba(255,107,0,0.15); }
-    .kpi-icon.c2 { background: rgba(21,101,192,0.15); }
-    .kpi-icon.c3 { background: rgba(19,136,8,0.15); }
-    .kpi-icon.c4 { background: rgba(233,30,99,0.15); }
-
-    .kpi-value {
-      font-size: 32px;
-      font-weight: 800;
-      letter-spacing: -1px;
-      line-height: 1;
-      margin-bottom: 6px;
-    }
-    .kpi-value.c1 { color: var(--saffron); }
-    .kpi-value.c2 { color: #64B5F6; }
-    .kpi-value.c3 { color: #81C784; }
-    .kpi-value.c4 { color: #F48FB1; }
-
-    .kpi-label {
-      font-size: 12px;
-      color: var(--text-muted);
-      font-weight: 500;
-      margin-bottom: 12px;
-    }
-
-    .kpi-change {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 12px;
-      font-weight: 600;
-      padding: 3px 8px;
-      border-radius: 6px;
-    }
-    .kpi-change.up { background: rgba(129,199,132,0.15); color: #81C784; }
-    .kpi-change.accent { background: rgba(100,181,246,0.15); color: #64B5F6; }
-
-    /* ── CHART GRID ── */
-    .chart-grid-2 {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 20px;
-      margin-bottom: 20px;
-    }
-
-    .chart-grid-3 {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-      margin-bottom: 20px;
-    }
-
-    .chart-grid-12 {
-      display: grid;
-      grid-template-columns: 1fr 2fr;
-      gap: 20px;
-      margin-bottom: 20px;
-    }
-
-    .chart-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 24px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .chart-card-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      margin-bottom: 20px;
-    }
-
-    .chart-card-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--text);
-    }
-    .chart-card-sub {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-top: 3px;
-    }
-
-    .chart-tag {
-      font-size: 10px;
-      font-weight: 600;
-      padding: 3px 8px;
-      border-radius: 6px;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-    }
-    .chart-tag.live { background: rgba(129,199,132,0.15); color: #81C784; }
-    .chart-tag.source { background: rgba(100,181,246,0.1); color: #64B5F6; }
-
-    .chart-wrap { position: relative; }
-
-    /* ── TREND TABLE ── */
-    .trend-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
-    }
-    .trend-table th {
-      text-align: left;
-      color: var(--text-muted);
-      font-weight: 500;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      padding: 8px 12px;
-      border-bottom: 1px solid var(--border);
-    }
-    .trend-table td {
-      padding: 10px 12px;
-      border-bottom: 1px solid rgba(255,255,255,0.04);
-      vertical-align: middle;
-    }
-    .trend-table tr:last-child td { border-bottom: none; }
-    .trend-table tr:hover td { background: rgba(255,255,255,0.03); }
-
-    .rank { color: var(--text-muted); font-size: 12px; }
-    .uni-name { font-weight: 600; }
-    .bar-mini {
-      height: 4px;
-      border-radius: 2px;
-      background: var(--grad2);
-      margin-top: 4px;
-    }
-    .num { font-weight: 700; color: #64B5F6; }
-
-    /* ── STATE BARS ── */
-    .state-bars { display: flex; flex-direction: column; gap: 12px; }
-    .state-bar-item { }
-    .state-bar-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 6px;
-    }
-    .state-name { font-size: 13px; font-weight: 600; }
-    .state-val { font-size: 13px; font-weight: 700; color: #64B5F6; }
-    .state-bar-bg {
-      height: 6px;
-      background: rgba(255,255,255,0.06);
-      border-radius: 3px;
-      overflow: hidden;
-    }
-    .state-bar-fill {
-      height: 100%;
-      border-radius: 3px;
-      background: var(--grad2);
-      transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
-    }
-
-    /* ── TABS ── */
-    .tab-group {
-      display: flex;
-      gap: 4px;
-      background: rgba(255,255,255,0.05);
-      border-radius: 10px;
-      padding: 4px;
-      margin-bottom: 20px;
-      width: fit-content;
-    }
-    .tab-btn {
-      padding: 7px 16px;
-      border-radius: 7px;
-      border: none;
-      background: transparent;
-      color: var(--text-muted);
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s;
-      font-family: inherit;
-    }
-    .tab-btn.active {
-      background: var(--card2);
-      color: var(--text);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-    }
-
-    /* ── SOURCE FOOTER ── */
-    .sources {
-      margin-top: 32px;
-      padding: 20px 24px;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      font-size: 12px;
-      color: var(--text-muted);
-      line-height: 1.8;
-    }
-    .sources strong { color: var(--text); }
-    .sources a { color: #64B5F6; text-decoration: none; }
-    .sources a:hover { text-decoration: underline; }
-
-    /* ── LEGEND ── */
-    .legend {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 16px;
-    }
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-    .legend-dot {
-      width: 10px; height: 10px;
-      border-radius: 3px;
-      flex-shrink: 0;
-    }
-
-    /* ── TOOLTIP OVERRIDE ── */
-    .chartjs-tooltip {
-      background: #1A2A42 !important;
-      border: 1px solid rgba(255,255,255,0.1) !important;
-      border-radius: 10px !important;
-    }
-
-    @media (max-width: 1200px) {
-      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
-      .chart-grid-2, .chart-grid-12 { grid-template-columns: 1fr; }
-      .chart-grid-3 { grid-template-columns: 1fr 1fr; }
-    }
-    @media (max-width: 768px) {
-      main { padding: 20px 16px 40px; }
-      .kpi-grid { grid-template-columns: 1fr 1fr; }
-      .chart-grid-3 { grid-template-columns: 1fr; }
-      header { padding: 0 16px; }
-    }
-
-    /* Animation */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .kpi-card, .chart-card {
-      animation: fadeUp 0.5s ease both;
-    }
-    .kpi-card:nth-child(1) { animation-delay: 0.05s; }
-    .kpi-card:nth-child(2) { animation-delay: 0.10s; }
-    .kpi-card:nth-child(3) { animation-delay: 0.15s; }
-    .kpi-card:nth-child(4) { animation-delay: 0.20s; }
-
-    .glow-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: #81C784;
-      box-shadow: 0 0 8px #81C784;
-      display: inline-block;
-      margin-right: 6px;
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="data/data.js"></script>
 </head>
 <body>
-
-<!-- ── HEADER ── -->
-<header>
-  <div class="header-inner">
-    <div class="logo">
-      <div class="flag-stripe">
-        <span class="s1"></span>
-        <span class="s2"></span>
-        <span class="s3"></span>
-      </div>
-      <h1>India → USA <span>Master's Dashboard</span></h1>
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <div class="brand">
+      <span class="flag" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span>India → US Students</span>
     </div>
-    <div class="header-right">
-      <div class="year-filter">
-        <label>Academic Year</label>
-        <select id="yearFilter" onchange="updateYear(this.value)">
-          <option value="all">All Years</option>
-          <option value="2024" selected>2024–25</option>
-          <option value="2023">2023–24</option>
-          <option value="2022">2022–23</option>
-          <option value="2021">2021–22</option>
-        </select>
-      </div>
-      <div class="badge">LIVE DATA</div>
-    </div>
+    <button id="themeBtn" class="btn-ghost" type="button" aria-label="Toggle dark mode">◐ Theme</button>
   </div>
 </header>
 
-<!-- ── MAIN ── -->
-<main>
+<main class="wrap">
+  <section class="intro">
+    <h1>Indian students in U.S. higher education</h1>
+    <p>Enrollment by academic level, post-study work (OPT), institution type, gender and economic impact. Every number comes straight from an official publication, and each card links to its source. Nothing here is estimated.</p>
+    <details class="note">
+      <summary>Read this first: what the numbers count</summary>
+      <ul>
+        <li><strong>Open Doors</strong> (IIE / U.S. State Dept.) counts students by <em>academic year</em> (e.g. 2024/25) and includes students on OPT.</li>
+        <li><strong>SEVIS by the Numbers</strong> (DHS / ICE) counts every active F-1/M-1 record in a <em>calendar year</em>, so it runs higher than Open Doors. The two are shown separately and never added together.</li>
+        <li><strong>Master's degrees:</strong> neither source publishes a master's-only count for Indian students. Open Doors' "Graduate" category (master's + doctoral + professional) is the closest official figure, so that is what this dashboard shows. Nationally, master's students are the largest higher-ed group in SEVIS (46.5% of all foreign degree seekers in 2024).</li>
+      </ul>
+    </details>
+  </section>
 
-  <!-- HERO -->
-  <div class="hero">
-    <div class="hero-content">
-      <h2>Indian Students Pursuing <em>Master's Degrees</em> in the United States</h2>
-      <p>A comprehensive data dashboard tracking enrollment trends, top institutions, fields of study, and state distribution — powered by IIE Open Doors, SEVIS/DHS, and NSF official data sources.</p>
-      <div class="hero-meta">
-        <div class="hero-meta-item">
-          <div class="dot" style="background:#FF6B00"></div>
-          IIE Open Doors 2024–25 Report
-        </div>
-        <div class="hero-meta-item">
-          <div class="dot" style="background:#64B5F6"></div>
-          SEVIS by the Numbers (ICE/DHS) 2024
-        </div>
-        <div class="hero-meta-item">
-          <div class="dot" style="background:#81C784"></div>
-          NSF NCSES Graduate Enrollment Survey
-        </div>
-        <div class="hero-meta-item">
-          <div class="dot" style="background:#F48FB1"></div>
-          NAFSA Economic Value Tool
-        </div>
-      </div>
-    </div>
+  <!-- Year filter (Open Doors) -->
+  <div class="filter-row">
+    <label for="yearSel">Open Doors academic year</label>
+    <select id="yearSel"></select>
   </div>
 
-  <!-- KPI CARDS -->
-  <div class="kpi-grid">
-    <div class="kpi-card c1">
-      <div class="kpi-icon c1">🎓</div>
-      <div class="kpi-value c1" id="kpi1">363,019</div>
-      <div class="kpi-label">Total Indian Students in USA (2024–25)</div>
-      <span class="kpi-change up">▲ 9.5% vs prior year</span>
-    </div>
-    <div class="kpi-card c2">
-      <div class="kpi-icon c2">📚</div>
-      <div class="kpi-value c2" id="kpi2">~196K</div>
-      <div class="kpi-label">Pursuing Graduate / Master's Degrees</div>
-      <span class="kpi-change up">▲ 19% vs 2022–23</span>
-    </div>
-    <div class="kpi-card c3">
-      <div class="kpi-icon c3">🏆</div>
-      <div class="kpi-value c3">#1</div>
-      <div class="kpi-label">India's Rank — Top Sending Country to USA</div>
-      <span class="kpi-change accent">Since 2023–24 (1st time since 2009)</span>
-    </div>
-    <div class="kpi-card c4">
-      <div class="kpi-icon c4">💼</div>
-      <div class="kpi-value c4">97,556</div>
-      <div class="kpi-label">Indian Students on OPT (Post-Graduation Work)</div>
-      <span class="kpi-change up">▲ 41% vs prior year</span>
-    </div>
-  </div>
+  <section class="kpis" id="kpis" aria-live="polite"></section>
 
-  <!-- ROW 1: Trend + STEM Donut -->
-  <div class="chart-grid-2">
+  <section class="grid g2">
+    <article class="card">
+      <header><h2>Total students from India</h2><p>Open Doors, academic years 2015/16–2024/25</p></header>
+      <div class="chart" style="height:280px"><canvas id="cTotal" aria-label="Line chart of total Indian students by academic year"></canvas></div>
+      <footer class="src" data-src="od23 od24 od25"></footer>
+    </article>
 
-    <!-- ENROLLMENT TREND -->
-    <div class="chart-card">
-      <div class="chart-card-header">
-        <div>
-          <div class="chart-card-title">📈 Annual Enrollment Trend — Indian Students in USA</div>
-          <div class="chart-card-sub">Total students and estimated graduate/master's students · 2013–2025</div>
+    <article class="card">
+      <header class="hrow">
+        <div><h2>By academic level</h2><p>Open Doors, 2021/22–2024/25</p></div>
+        <div class="seg" role="group" aria-label="Units">
+          <button type="button" class="on" data-unit="count">Count</button>
+          <button type="button" data-unit="share">Share %</button>
         </div>
-        <div>
-          <div class="tab-group" id="trendTabs">
-            <button class="tab-btn active" onclick="switchTrend('total',this)">Total</button>
-            <button class="tab-btn" onclick="switchTrend('grad',this)">Graduate</button>
-            <button class="tab-btn" onclick="switchTrend('masters',this)">Master's Est.</button>
-          </div>
-        </div>
-      </div>
-      <div class="chart-wrap" style="height:300px">
-        <canvas id="trendChart"></canvas>
-      </div>
-      <div class="legend">
-        <div class="legend-item"><div class="legend-dot" style="background:#FF6B00"></div> Total Indian Students</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#64B5F6"></div> Graduate Students</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#81C784"></div> Master's Est. (85% of Grad)</div>
-      </div>
-    </div>
+      </header>
+      <div class="chart" style="height:280px"><canvas id="cLevels" aria-label="Stacked bar chart of Indian students by academic level"></canvas></div>
+      <div class="legend" id="lgLevels"></div>
+      <footer class="src" data-src="od23 od24 od25"></footer>
+    </article>
+  </section>
 
-    <!-- STEM PIE -->
-    <div class="chart-card">
-      <div class="chart-card-header">
-        <div>
-          <div class="chart-card-title">🔬 STEM vs Non-STEM</div>
-          <div class="chart-card-sub">Indian Master's students, 2023–24</div>
-        </div>
-        <span class="chart-tag source">Open Doors</span>
-      </div>
-      <div class="chart-wrap" style="height:240px">
-        <canvas id="stemChart"></canvas>
-      </div>
-      <div class="legend" style="justify-content:center; margin-top:12px">
-        <div class="legend-item"><div class="legend-dot" style="background:#FF6B00"></div> STEM (~88%)</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#1565C0"></div> Non-STEM (~12%)</div>
-      </div>
-    </div>
+  <section class="grid g2">
+    <article class="card">
+      <header><h2>Active SEVIS records, Indian citizens</h2><p>DHS SEVIS by the Numbers, calendar years 2019–2024 (all F-1/M-1 records incl. OPT)</p></header>
+      <div class="chart" style="height:260px"><canvas id="cSevis" aria-label="Bar chart of SEVIS records for Indian students"></canvas></div>
+      <footer class="src" data-src="sevis19 sevis20 sevis21 sevis22 sevis23 sevis24"></footer>
+    </article>
 
-  </div>
+    <article class="card">
+      <header><h2>Gender split</h2><p>Share of Indian F-1/M-1 SEVIS records, 2019–2024</p></header>
+      <div class="chart" style="height:260px"><canvas id="cGender" aria-label="100 percent stacked bar of female and male share"></canvas></div>
+      <div class="legend" id="lgGender"></div>
+      <footer class="src" data-src="sevis19 sevis20 sevis21 sevis22 sevis23 sevis24"></footer>
+    </article>
+  </section>
 
-  <!-- ROW 2: Fields + Universities + States -->
-  <div class="chart-grid-3">
+  <section class="grid g3">
+    <article class="card">
+      <header><h2>Where they study: institution type</h2><p id="instSub">Open Doors</p></header>
+      <div class="chart" style="height:240px"><canvas id="cInst" aria-label="Bar chart of Indian students by institution type"></canvas></div>
+      <footer class="src" id="instSrc"></footer>
+    </article>
 
-    <!-- FIELDS OF STUDY -->
-    <div class="chart-card">
-      <div class="chart-card-header">
-        <div>
-          <div class="chart-card-title">📖 Top Fields of Study</div>
-          <div class="chart-card-sub">Indian Master's students in USA, 2024</div>
-        </div>
-        <span class="chart-tag source">SEVIS / IIE</span>
-      </div>
-      <div class="chart-wrap" style="height:280px">
-        <canvas id="fieldsChart"></canvas>
-      </div>
-    </div>
+    <article class="card">
+      <header><h2>Top receiving states</h2><p id="stateSub">Open Doors</p></header>
+      <ol class="states" id="stateList"></ol>
+      <p class="muted small">Ranked as listed on the fact sheet. Open Doors does not print per-state counts for India.</p>
+      <footer class="src" id="stateSrc"></footer>
+    </article>
 
-    <!-- TOP UNIVERSITIES -->
-    <div class="chart-card">
-      <div class="chart-card-header">
-        <div>
-          <div class="chart-card-title">🏛️ Top Universities</div>
-          <div class="chart-card-sub">Highest Indian student enrollment</div>
-        </div>
-        <span class="chart-tag source">Open Doors 2024</span>
-      </div>
-      <div style="overflow:auto; max-height:300px">
-        <table class="trend-table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>University</th>
-              <th>Students</th>
-            </tr>
-          </thead>
-          <tbody id="uniTable"></tbody>
-        </table>
-      </div>
-    </div>
+    <article class="card">
+      <header><h2>STEM OPT, 2024</h2><p>Post-graduation STEM work extension</p></header>
+      <div class="hero-num" id="stemNum"></div>
+      <p class="muted" id="stemTxt"></p>
+      <div class="meter" aria-hidden="true"><span id="stemBar"></span></div>
+      <footer class="src" data-src="sevis24stem sevis24 sevis23"></footer>
+    </article>
+  </section>
 
-    <!-- TOP STATES -->
-    <div class="chart-card">
-      <div class="chart-card-header">
-        <div>
-          <div class="chart-card-title">🗺️ Top States</div>
-          <div class="chart-card-sub">Indian student concentration by state</div>
-        </div>
-        <span class="chart-tag source">SEVIS 2024</span>
-      </div>
-      <div class="state-bars" id="stateBars"></div>
-    </div>
+  <section class="grid g2">
+    <article class="card">
+      <header><h2>Economic impact on the U.S.</h2><p>Spending by Indian students, U.S. Dept. of Commerce figure, as printed by Open Doors</p></header>
+      <div class="chart" style="height:220px"><canvas id="cEcon" aria-label="Bar chart of economic impact in billions of dollars"></canvas></div>
+      <footer class="src" data-src="od23 od24 od25"></footer>
+    </article>
 
-  </div>
+    <article class="card">
+      <header><h2>India's rank among all countries of origin</h2><p>Open Doors</p></header>
+      <div class="rank-row" id="rankRow"></div>
+      <p class="muted small">India passed China as the top source of international students in 2023/24 and stayed #1 in 2024/25.</p>
+      <footer class="src" data-src="od23 od24 od25"></footer>
+    </article>
+  </section>
 
-  <!-- ROW 3: YoY Growth + Gender + Degree Level -->
-  <div class="chart-grid-3">
+  <section class="card">
+    <header class="hrow">
+      <div><h2>All the data</h2><p>Every figure used on this page, with its source</p></div>
+      <button type="button" class="btn" id="csvBtn">Download CSV</button>
+    </header>
+    <div class="table-wrap"><table id="dataTable"><thead><tr><th>Dataset</th><th>Period</th><th>Measure</th><th class="r">Value</th><th>Source</th></tr></thead><tbody></tbody></table></div>
+  </section>
 
-    <!-- YoY GROWTH -->
-    <div class="chart-card">
-      <div class="chart-card-header">
-        <div>
-          <div class="chart-card-title">📊 Year-over-Year Growth %</div>
-          <div class="chart-card-sub">Annual growth in Indian student enrollment</div>
-        </div>
-        <span class="chart-tag live"><span class="glow-dot"></span>Live</span>
-      </div>
-      <div class="chart-wrap" style="height:220px">
-        <canvas id="growthChart"></canvas>
-      </div>
-    </div>
-
-    <!-- GENDER -->
-    <div class="chart-card">
-      <div class="chart-card-header">
-        <div>
-          <div class="chart-card-title">👥 Gender Distribution</div>
-          <div class="chart-card-sub">Indian Master's students in USA</div>
-        </div>
-        <span class="chart-tag source">NSF NCSES</span>
-      </div>
-      <div class="chart-wrap" style="height:220px">
-        <canvas id="genderChart"></canvas>
-      </div>
-      <div style="text-align:center; margin-top:10px; font-size:12px; color:var(--text-muted)">
-        Gender gap is narrowing — female enrollment up ~8% annually
-      </div>
-    </div>
-
-    <!-- DEGREE BREAKDOWN -->
-    <div class="chart-card">
-      <div class="chart-card-header">
-        <div>
-          <div class="chart-card-title">🎯 Degree Level Breakdown</div>
-          <div class="chart-card-sub">Indian students by program type, 2023–24</div>
-        </div>
-        <span class="chart-tag source">IIE 2024</span>
-      </div>
-      <div class="chart-wrap" style="height:220px">
-        <canvas id="degreeChart"></canvas>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- ROW 4: Detailed trend table -->
-  <div class="chart-card" style="margin-bottom:20px">
-    <div class="chart-card-header">
-      <div>
-        <div class="chart-card-title">📋 Complete Year-by-Year Data Table</div>
-        <div class="chart-card-sub">Indian students in US higher education — official IIE Open Doors & SEVIS data</div>
-      </div>
-      <span class="chart-tag live"><span class="glow-dot"></span>Verified</span>
-    </div>
-    <div style="overflow-x:auto">
-      <table class="trend-table" id="fullTable">
-        <thead>
-          <tr>
-            <th>Academic Year</th>
-            <th>Total Indian Students</th>
-            <th>Graduate Students</th>
-            <th>Master's (Estimated)</th>
-            <th>OPT Participants</th>
-            <th>YoY Change</th>
-            <th>Global Rank</th>
-          </tr>
-        </thead>
-        <tbody id="fullTableBody"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- SOURCES -->
-  <div class="sources">
-    <strong>Data Sources &amp; Methodology</strong><br/>
-    All data sourced from official government and institutional publications. Master's estimates derived at ~85% of graduate enrollment (per NSF NCSES and SEVIS graduate-level breakdowns).<br/><br/>
-    • <strong>IIE Open Doors 2024 / 2025:</strong> <a href="https://opendoorsdata.org/annual-release/international-students/" target="_blank">opendoorsdata.org</a> — Primary source for annual enrollment by country and level of study.<br/>
-    • <strong>SEVIS by the Numbers 2024 (ICE/DHS):</strong> <a href="https://www.ice.gov/sevis/sevis-by-the-numbers" target="_blank">ice.gov/sevis</a> — Active F-1 visa records, state and field breakdowns.<br/>
-    • <strong>DHS Study in the States:</strong> <a href="https://studyinthestates.dhs.gov" target="_blank">studyinthestates.dhs.gov</a> — SEVIS quarterly reports and trend analysis.<br/>
-    • <strong>NSF NCSES:</strong> <a href="https://ncses.nsf.gov" target="_blank">ncses.nsf.gov</a> — Gender breakdown, STEM field distribution for international graduate students.<br/>
-    • <strong>NAFSA:</strong> <a href="https://www.nafsa.org" target="_blank">nafsa.org</a> — Economic value and enrollment trend data.<br/>
-    • Dashboard built June 2026 · Data current through 2024–25 academic year.
-  </div>
-
+  <section class="card sources">
+    <h2>Sources</h2>
+    <ol id="srcList"></ol>
+    <p class="muted small">Data checked against the source PDFs in November 2026. Year-over-year changes and shares are calculated from the published numbers.</p>
+  </section>
 </main>
 
-<script>
-// ─────────────────────────────────────────
-// DATA
-// ─────────────────────────────────────────
-const YEARS = ['2012–13','2013–14','2014–15','2015–16','2016–17','2017–18','2018–19','2019–20','2020–21','2021–22','2022–23','2023–24','2024–25'];
-const TOTAL = [96754, 102673, 132888, 165918, 186267, 196271, 202014, 193124, 167582, 199182, 268923, 331602, 363019];
-const GRAD  = [null, null, null, null, null, null, null, null, null, 102024, 165936, 196567, null];
-// Graduate est for missing years (60% of total for pre-2022)
-const GRAD_EST = TOTAL.map((t,i) => GRAD[i] !== null ? GRAD[i] : Math.round(t * 0.62));
-const MASTERS_EST = GRAD_EST.map(g => Math.round(g * 0.85));
-const OPT = [null,null,null,null,null,null,null,null,null,null,null,97556,null];
-const RANKS = ['2nd','2nd','2nd','2nd','2nd','2nd','2nd','2nd','2nd','2nd','2nd','1st','1st'];
+<footer class="pagefoot wrap muted small">Built by kdeepr · Open-source on GitHub · Not affiliated with IIE, the U.S. Department of State or DHS.</footer>
 
-// YoY growth
-const GROWTH = TOTAL.map((v,i) => i===0 ? null : +(((v-TOTAL[i-1])/TOTAL[i-1])*100).toFixed(1));
-
-// Fields of study
-const FIELDS = {
-  labels: ['Computer Science','Engineering','Data Science / Analytics','Business / MBA','Math & Statistics','Info Systems','Physical Sciences','Other STEM','Non-STEM'],
-  data:   [43, 23, 10, 8, 5, 4, 3, 2, 2],
-  colors: ['#FF6B00','#1565C0','#E91E63','#FFC107','#00BCD4','#9C27B0','#4CAF50','#FF5722','#607D8B']
-};
-
-// Top Universities
-const UNIS = [
-  { name:'New York University', students:5142, state:'NY' },
-  { name:'Columbia University', students:4800, state:'NY' },
-  { name:'Northeastern University', students:4200, state:'MA' },
-  { name:'Univ. of Southern California', students:3900, state:'CA' },
-  { name:'Arizona State University', students:3800, state:'AZ' },
-  { name:'Carnegie Mellon University', students:3500, state:'PA' },
-  { name:'Georgia Institute of Technology', students:3300, state:'GA' },
-  { name:'Purdue University', students:3100, state:'IN' },
-  { name:'Univ. of Illinois Urbana-Champaign', students:2900, state:'IL' },
-  { name:'UT Dallas', students:2750, state:'TX' },
-];
-
-// Top States (est. % of Indian students)
-const STATES = [
-  { name:'California', pct:18.2, count:66100 },
-  { name:'Texas', pct:12.7, count:46100 },
-  { name:'New York', pct:11.4, count:41400 },
-  { name:'Illinois', pct:6.9, count:25100 },
-  { name:'Massachusetts', pct:6.1, count:22100 },
-  { name:'Pennsylvania', pct:5.3, count:19200 },
-  { name:'Ohio', pct:4.8, count:17400 },
-  { name:'New Jersey', pct:4.5, count:16300 },
-  { name:'Michigan', pct:4.1, count:14900 },
-  { name:'Georgia', pct:3.9, count:14200 },
-];
-
-// ─────────────────────────────────────────
-// CHART DEFAULTS
-// ─────────────────────────────────────────
-Chart.defaults.color = '#8E9BB5';
-Chart.defaults.font.family = 'Inter, sans-serif';
-Chart.defaults.plugins.tooltip.backgroundColor = '#1A2A42';
-Chart.defaults.plugins.tooltip.borderColor = 'rgba(255,255,255,0.1)';
-Chart.defaults.plugins.tooltip.borderWidth = 1;
-Chart.defaults.plugins.tooltip.padding = 12;
-Chart.defaults.plugins.tooltip.titleFont = { weight: '700', size: 13 };
-Chart.defaults.plugins.legend.display = false;
-
-// ─────────────────────────────────────────
-// TREND CHART
-// ─────────────────────────────────────────
-let trendMode = 'total';
-const trendCtx = document.getElementById('trendChart').getContext('2d');
-
-function makeGradient(ctx, color1, color2) {
-  const g = ctx.createLinearGradient(0, 0, 0, 300);
-  g.addColorStop(0, color1);
-  g.addColorStop(1, color2);
-  return g;
-}
-
-const trendChart = new Chart(trendCtx, {
-  type: 'line',
-  data: {
-    labels: YEARS,
-    datasets: [
-      {
-        label: 'Total Students',
-        data: TOTAL,
-        borderColor: '#FF6B00',
-        backgroundColor: makeGradient(trendCtx, 'rgba(255,107,0,0.25)', 'rgba(255,107,0,0.01)'),
-        fill: true,
-        tension: 0.4,
-        pointRadius: 5,
-        pointHoverRadius: 8,
-        pointBackgroundColor: '#FF6B00',
-        borderWidth: 2.5,
-      },
-      {
-        label: 'Graduate Students',
-        data: GRAD_EST,
-        borderColor: '#64B5F6',
-        backgroundColor: makeGradient(trendCtx, 'rgba(100,181,246,0.2)', 'rgba(100,181,246,0.01)'),
-        fill: true,
-        tension: 0.4,
-        pointRadius: 4,
-        pointHoverRadius: 7,
-        pointBackgroundColor: '#64B5F6',
-        borderWidth: 2,
-        hidden: true,
-      },
-      {
-        label: "Master's Est.",
-        data: MASTERS_EST,
-        borderColor: '#81C784',
-        backgroundColor: makeGradient(trendCtx, 'rgba(129,199,132,0.2)', 'rgba(129,199,132,0.01)'),
-        fill: true,
-        tension: 0.4,
-        pointRadius: 4,
-        pointHoverRadius: 7,
-        pointBackgroundColor: '#81C784',
-        borderWidth: 2,
-        hidden: true,
-      }
-    ]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    interaction: { mode: 'index', intersect: false },
-    plugins: {
-      tooltip: {
-        callbacks: {
-          label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString()}`
-        }
-      }
-    },
-    scales: {
-      x: {
-        grid: { color: 'rgba(255,255,255,0.05)' },
-        ticks: { maxRotation: 45, font: { size: 11 } }
-      },
-      y: {
-        grid: { color: 'rgba(255,255,255,0.05)' },
-        ticks: {
-          callback: v => v >= 1000 ? (v/1000).toFixed(0)+'K' : v
-        }
-      }
-    }
-  }
-});
-
-function switchTrend(mode, btn) {
-  trendMode = mode;
-  document.querySelectorAll('#trendTabs .tab-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  trendChart.data.datasets[0].hidden = (mode !== 'total');
-  trendChart.data.datasets[1].hidden = (mode !== 'grad');
-  trendChart.data.datasets[2].hidden = (mode !== 'masters');
-  trendChart.update();
-}
-
-// ─────────────────────────────────────────
-// STEM DONUT
-// ─────────────────────────────────────────
-new Chart(document.getElementById('stemChart'), {
-  type: 'doughnut',
-  data: {
-    labels: ['STEM (~88%)', 'Non-STEM (~12%)'],
-    datasets: [{
-      data: [88, 12],
-      backgroundColor: ['#FF6B00','#1565C0'],
-      borderColor: '#162237',
-      borderWidth: 3,
-      hoverOffset: 8
-    }]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    cutout: '68%',
-    plugins: {
-      tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.raw}%` } }
-    }
-  }
-});
-
-// ─────────────────────────────────────────
-// FIELDS HORIZONTAL BAR
-// ─────────────────────────────────────────
-new Chart(document.getElementById('fieldsChart'), {
-  type: 'bar',
-  data: {
-    labels: FIELDS.labels,
-    datasets: [{
-      data: FIELDS.data,
-      backgroundColor: FIELDS.colors,
-      borderRadius: 6,
-      borderSkipped: false,
-    }]
-  },
-  options: {
-    indexAxis: 'y',
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      tooltip: {
-        callbacks: { label: ctx => ` ${ctx.raw}% of Indian master's students` }
-      }
-    },
-    scales: {
-      x: {
-        grid: { color: 'rgba(255,255,255,0.05)' },
-        ticks: { callback: v => v+'%' }
-      },
-      y: {
-        grid: { display: false },
-        ticks: { font: { size: 11 } }
-      }
-    }
-  }
-});
-
-// ─────────────────────────────────────────
-// UNIVERSITIES TABLE
-// ─────────────────────────────────────────
-const uniTbody = document.getElementById('uniTable');
-const maxUni = UNIS[0].students;
-UNIS.forEach((u, i) => {
-  const pct = ((u.students / maxUni) * 100).toFixed(0);
-  uniTbody.innerHTML += `
-    <tr>
-      <td class="rank">${i+1}</td>
-      <td>
-        <div class="uni-name">${u.name}</div>
-        <div class="bar-mini" style="width:${pct}%"></div>
-      </td>
-      <td class="num">${u.students.toLocaleString()}</td>
-    </tr>`;
-});
-
-// ─────────────────────────────────────────
-// STATE BARS
-// ─────────────────────────────────────────
-const stateCont = document.getElementById('stateBars');
-const maxState = STATES[0].pct;
-STATES.forEach(s => {
-  const pct = ((s.pct / maxState) * 100).toFixed(0);
-  stateCont.innerHTML += `
-    <div class="state-bar-item">
-      <div class="state-bar-header">
-        <span class="state-name">${s.name}</span>
-        <span class="state-val">${s.count.toLocaleString()} <span style="color:var(--text-muted);font-weight:400;font-size:11px">(${s.pct}%)</span></span>
-      </div>
-      <div class="state-bar-bg">
-        <div class="state-bar-fill" style="width:${pct}%"></div>
-      </div>
-    </div>`;
-});
-
-// ─────────────────────────────────────────
-// YoY GROWTH CHART
-// ─────────────────────────────────────────
-const growthColors = GROWTH.map((g,i) => {
-  if (g === null) return 'rgba(0,0,0,0)';
-  return g >= 0 ? 'rgba(129,199,132,0.85)' : 'rgba(233,30,99,0.85)';
-});
-
-new Chart(document.getElementById('growthChart'), {
-  type: 'bar',
-  data: {
-    labels: YEARS,
-    datasets: [{
-      data: GROWTH,
-      backgroundColor: growthColors,
-      borderRadius: 5,
-      borderSkipped: false,
-    }]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      tooltip: { callbacks: { label: ctx => ` ${ctx.raw !== null ? ctx.raw+'%' : 'N/A'}` } }
-    },
-    scales: {
-      x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { font:{size:10}, maxRotation: 45 } },
-      y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { callback: v => v+'%' } }
-    }
-  }
-});
-
-// ─────────────────────────────────────────
-// GENDER CHART
-// ─────────────────────────────────────────
-new Chart(document.getElementById('genderChart'), {
-  type: 'bar',
-  data: {
-    labels: ['2019–20','2020–21','2021–22','2022–23','2023–24'],
-    datasets: [
-      {
-        label: 'Male',
-        data: [72, 71, 70, 68, 66],
-        backgroundColor: '#1565C0',
-        borderRadius: 4,
-        stack: 'gender'
-      },
-      {
-        label: 'Female',
-        data: [28, 29, 30, 32, 34],
-        backgroundColor: '#E91E63',
-        borderRadius: 4,
-        stack: 'gender'
-      }
-    ]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        display: true,
-        position: 'bottom',
-        labels: { color:'#8E9BB5', font:{size:11}, boxWidth:10, padding:12 }
-      },
-      tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.raw}%` } }
-    },
-    scales: {
-      x: { stacked:true, grid:{ color:'rgba(255,255,255,0.05)' }, ticks:{font:{size:11}} },
-      y: { stacked:true, grid:{ color:'rgba(255,255,255,0.05)' }, ticks:{callback:v=>v+'%'}, max:100 }
-    }
-  }
-});
-
-// ─────────────────────────────────────────
-// DEGREE LEVEL DONUT
-// ─────────────────────────────────────────
-new Chart(document.getElementById('degreeChart'), {
-  type: 'doughnut',
-  data: {
-    labels: ["Graduate/Master's (59%)",'OPT (29%)','Undergrad (9%)','Non-Degree (3%)'],
-    datasets: [{
-      data: [59, 29, 9, 3],
-      backgroundColor: ['#64B5F6','#FF6B00','#81C784','#607D8B'],
-      borderColor: '#162237',
-      borderWidth: 3,
-      hoverOffset: 6
-    }]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    cutout: '62%',
-    plugins: {
-      legend: {
-        display: true,
-        position: 'bottom',
-        labels: { color:'#8E9BB5', font:{size:10}, boxWidth:10, padding:8 }
-      },
-      tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.raw}%` } }
-    }
-  }
-});
-
-// ─────────────────────────────────────────
-// FULL DATA TABLE
-// ─────────────────────────────────────────
-const tbody = document.getElementById('fullTableBody');
-const tableData = [
-  ['2012–13', 96754,  null,   null,   null,   null,    '2nd'],
-  ['2013–14', 102673, null,   null,   null,   '+6.1%', '2nd'],
-  ['2014–15', 132888, null,   null,   null,   '+29.4%','2nd'],
-  ['2015–16', 165918, null,   null,   null,   '+24.9%','2nd'],
-  ['2016–17', 186267, null,   null,   null,   '+12.3%','2nd'],
-  ['2017–18', 196271, null,   null,   null,   '+5.4%', '2nd'],
-  ['2018–19', 202014, null,   null,   null,   '+2.9%', '2nd'],
-  ['2019–20', 193124, null,   null,   null,   '-4.4%', '2nd'],
-  ['2020–21', 167582, null,   null,   null,   '-13.2%','2nd'],
-  ['2021–22', 199182, 102024, 86720,  null,   '+18.9%','2nd'],
-  ['2022–23', 268923, 165936, 141045, null,   '+35.0%','2nd'],
-  ['2023–24', 331602, 196567, 167082, 97556,  '+23.3%','1st'],
-  ['2024–25', 363019, null,   null,   null,   '+9.5%', '1st'],
-];
-
-tableData.forEach(row => {
-  const [yr, total, grad, masters, opt, yoy, rank] = row;
-  const yoyColor = yoy && yoy.startsWith('-') ? '#F48FB1' : '#81C784';
-  tbody.innerHTML += `
-    <tr>
-      <td style="font-weight:600">${yr}</td>
-      <td style="font-weight:700;color:#FF6B00">${total.toLocaleString()}</td>
-      <td style="color:#64B5F6">${grad ? grad.toLocaleString() : '—'}</td>
-      <td style="color:#81C784">${masters ? masters.toLocaleString() : '—'}</td>
-      <td style="color:#F48FB1">${opt ? opt.toLocaleString() : '—'}</td>
-      <td style="color:${yoyColor};font-weight:700">${yoy || '—'}</td>
-      <td><span style="background:${rank==='1st'?'rgba(255,193,7,0.15)':'rgba(100,181,246,0.1)'}; color:${rank==='1st'?'#FFC107':'#64B5F6'}; padding:2px 8px; border-radius:4px; font-size:12px; font-weight:600">${rank}</span></td>
-    </tr>`;
-});
-
-// ─────────────────────────────────────────
-// YEAR FILTER (updates KPI cards)
-// ─────────────────────────────────────────
-const yearData = {
-  'all':  { kpi1: '363,019', kpi2: '~196K', k1change:'▲ 9.5% vs prior year', k2change:'▲ 19% vs 2022–23' },
-  '2024': { kpi1: '363,019', kpi2: '~178K (est.)', k1change:'▲ 9.5% vs 2023–24', k2change:'▲ 9% est.' },
-  '2023': { kpi1: '331,602', kpi2: '196,567', k1change:'▲ 23.3% vs 2022–23', k2change:'▲ 19% vs 2021–22' },
-  '2022': { kpi1: '268,923', kpi2: '165,936', k1change:'▲ 35.0% vs 2021–22', k2change:'▲ 63% vs 2020–21' },
-  '2021': { kpi1: '199,182', kpi2: '102,024', k1change:'▲ 18.9% vs 2020–21', k2change:'Open Doors verified' },
-};
-
-function updateYear(val) {
-  const d = yearData[val] || yearData['all'];
-  document.getElementById('kpi1').textContent = d.kpi1;
-  document.getElementById('kpi2').textContent = d.kpi2;
-}
-</script>
+<script src="assets/app.js"></script>
 </body>
 </html>
